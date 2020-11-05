@@ -49,8 +49,8 @@ class LogisticReg():
         h = self.sigmoid(X.dot(theta))
 
         # cost
-        term_1 = ((-y).transpose()).dot(np.log(h))
-        term_2 = ((1-y).transpose()).dot(np.log(1-h))
+        term_1 = ((-y).T).dot(np.log(h))
+        term_2 = ((1-y).T).dot(np.log(1-h))
         cost = (1/m) * (term_1 - term_2)
 
         # regularizing cost
@@ -58,7 +58,7 @@ class LogisticReg():
         cost += cost_reg
 
         # gradients
-        grad = (1/m) * ( (X.transpose()).dot(h - y) )
+        grad = (1/m) * ( (X.T).dot(h - y) )
 
         # regularizing gradients
         grad_reg = np.zeros_like(grad)
