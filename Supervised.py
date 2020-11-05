@@ -31,20 +31,9 @@ class LogisticReg():
         return 1/(1 + np.exp(-z))
     
 
-    def cost_func(self, X,y, theta=None):
-        # convert input to numpy array
-        X, y  = np.array(X), np.array(y)
+    def cost_func(self, theta, X,y):
+        m = len(y)
 
-        m, n = X.shape
-        y = y.reshape(m,1) # reshape y for compatibility
-
-        if theta is None: # if theta is not given
-            # set theta to zeros
-            theta = np.zeros((n,1))
-        else:
-            theta = np.array(theta) # convert to numpy array
-            theta = theta.reshape(n,1) # reshape for compatability
-        
         # predictions
         h = self.sigmoid(X.dot(theta))
 
@@ -68,9 +57,25 @@ class LogisticReg():
         return cost, grad
 
 
-    def train(self, X,y):
-        pass
+    def train(self, X,y, theta=None):
+        # convert input to numpy array
+        X, y  = np.array(X), np.array(y)
+
+        m, n = X.shape
+        y = y.reshape(m,1) # reshape y for compatibility
+
+        if theta is None: # if theta is not given
+            # set theta to zeros
+            theta = np.zeros((n,1))
+        else:
+            theta = np.array(theta) # convert to numpy array
+            theta = theta.reshape(n,1) # reshape for compatability
+        
+        # optimize
+        result = op.minimize(fun=self.cost_func, x0=theta, args=(X, y), method='TNC', jac=True)
+
+        # set optimal theta and cost
+        self.theta, self.cost = result.x, result.fun
 
 
-    def predict(self, X,y):
-        pass
+    
