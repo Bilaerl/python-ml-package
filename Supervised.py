@@ -33,7 +33,7 @@ class LogisticReg():
 
     def cost_func(self, theta, X,y):
         m = len(y)
-
+        
         # predictions
         h = self.sigmoid(X.dot(theta))
 
@@ -78,4 +78,11 @@ class LogisticReg():
         self.theta, self.cost = result.x, result.fun
 
 
-    
+    def predict(self, X):
+        # raw prediction
+        h = self.sigmoid(X.dot(self.theta))
+        # compare raw prediction to threshold
+        predictions = h > self.threshold
+
+        # return predictions as int
+        return predictions.astype('int')
