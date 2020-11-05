@@ -32,7 +32,9 @@ class LogisticReg():
     
 
     def cost_func(self, theta, X,y):
-        m = len(y)
+        m,n = X.shape
+        # reshape for compatibility
+        y, theta = y.reshape(m,1), theta.reshape(n,1)
         
         # predictions
         h = self.sigmoid(X.dot(theta))
@@ -61,15 +63,12 @@ class LogisticReg():
         # convert input to numpy array
         X, y  = np.array(X), np.array(y)
 
-        m, n = X.shape
-        y = y.reshape(m,1) # reshape y for compatibility
-
         if theta is None: # if theta is not given
-            # set theta to zeros
-            theta = np.zeros((n,1))
+            # set theta to zeros of shape nx1
+            theta = np.zeros((X.shape[1],1))
         else:
-            theta = np.array(theta) # convert to numpy array
-            theta = theta.reshape(n,1) # reshape for compatability
+            # convert to numpy array
+            theta = np.array(theta)
         
         # optimize
         result = op.minimize(fun=self.cost_func, x0=theta, args=(X, y), method='TNC', jac=True)
