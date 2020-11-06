@@ -59,7 +59,7 @@ class LogisticReg():
         return cost, grad
 
 
-    def train(self, X,y, theta=None):
+    def train(self, X,y, theta=None, optimizer='TNC'):
         # convert input to numpy array
         X, y  = np.array(X), np.array(y)
 
@@ -71,7 +71,7 @@ class LogisticReg():
             theta = np.array(theta)
         
         # optimize
-        result = op.minimize(fun=self.cost_func, x0=theta, args=(X, y), method='TNC', jac=True)
+        result = op.minimize(fun=self.cost_func, x0=theta, args=(X, y), method=optimizer, jac=True)
 
         # set optimal theta and cost
         self.theta, self.cost = result.x, result.fun
