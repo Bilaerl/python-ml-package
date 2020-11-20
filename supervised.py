@@ -1,7 +1,38 @@
+from abc import ABC, abstractmethod
 import numpy as np
 import scipy.optimize as op
 
-class LinearReg():
+
+class Supervised(ABC):
+
+    @abstractmethod
+    def cost_func(self, theta, X,y): pass
+
+    @abstractmethod
+    def predict(self, X): pass
+
+
+    def train(self, X,y, theta=None, optimizer='TNC'):      
+        # convert input to numpy array
+        X, y  = np.array(X), np.array(y)
+
+        if theta is None: # if theta is not given
+            # set theta to zeros of shape nx1
+            theta = np.zeros((X.shape[1],1))
+        else:
+            # convert to numpy array
+            theta = np.array(theta)
+        
+        # optimize
+        result = op.minimize(fun=self.cost_func, x0=theta, args=(X, y), method=optimizer, jac=True)
+
+        # set optimal theta and cost
+        self.theta, self.cost = result.x, result.fun
+
+
+
+
+class LinearReg(Supervised):
 
     def __init__ (self):
         pass
@@ -15,7 +46,7 @@ class LinearReg():
         pass
 
 
-class LogisticReg():
+class LogisticReg(Supervised):
 
     def __init__(self, threshold=0.5, reg_term=0):
         self.threshold = threshold
@@ -57,24 +88,6 @@ class LogisticReg():
         grad += grad_reg
 
         return cost, grad
-
-
-    def train(self, X,y, theta=None, optimizer='TNC'):
-        # convert input to numpy array
-        X, y  = np.array(X), np.array(y)
-
-        if theta is None: # if theta is not given
-            # set theta to zeros of shape nx1
-            theta = np.zeros((X.shape[1],1))
-        else:
-            # convert to numpy array
-            theta = np.array(theta)
-        
-        # optimize
-        result = op.minimize(fun=self.cost_func, x0=theta, args=(X, y), method=optimizer, jac=True)
-
-        # set optimal theta and cost
-        self.theta, self.cost = result.x, result.fun
 
 
     def predict(self, X):
