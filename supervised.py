@@ -12,7 +12,20 @@ class Supervised(ABC):
     def predict(self, X): pass
 
 
-    def train(self, X,y, theta=None, optimizer='TNC'):      
+    def train(self, X,y, theta=None, optimizer='TNC'):
+        """Train a model, fit the model to given data.
+
+        Input:
+            X (array_like): m examples having n features
+            y (array_like): Labels for the examples in X
+            theta (array_like): Gradients to start optimization from,
+                default is an n size vector of zeros
+            optimizer: Optimization algorithm to use, default is 'TNC'
+        
+        Output:
+            None
+
+        """
         # convert input to numpy array
         X, y  = np.array(X), np.array(y)
 
@@ -47,6 +60,18 @@ class LinearReg(Supervised):
 
 
 class LogisticReg(Supervised):
+    """Create a Logistic Regression object
+
+    Input:
+        threshold (float): A number between 0 and 1 used as classification boundary
+            above which everything is of that particular class (1), and below which
+            everything is not of the class (0)
+        reg_term (int): A number by which the model is regularize to stop it from
+            overfitting
+    
+    Output:
+        None
+    """
 
     def __init__(self, threshold=0.5, reg_term=0):
         self.threshold = threshold
@@ -59,10 +84,30 @@ class LogisticReg(Supervised):
 
     @staticmethod
     def sigmoid(z):
+        """Squashes any number to a number between 0 and 1
+
+        Input:
+            z (int|float|array_like): Number or series of numbers to be squashed
+        
+        Output:
+            (float|array_like): Input squashed to number or series of numbers between 0 and 1
+        """
         return 1/(1 + np.exp(-z))
     
 
     def cost_func(self, theta, X,y):
+        """Find the cost of a prediction and gradients to minimize that cost
+
+        Input:
+            theta (array_like): Current gradients to be used in making prediction
+            X (array_like): m examples of n features on which the predictions will be made
+            y (array_like): Labels for examples of X. These are the targets of the prediction
+                and will be used to measure accuracy of predictions made
+
+        Output:
+            cost (float): Cost of the current prediction
+            grad (array_like): Corrected gradients base on the cost of current prediction
+        """
         m,n = X.shape
         # reshape for compatibility
         y, theta = y.reshape(m,1), theta.reshape(n,1)
@@ -91,6 +136,16 @@ class LogisticReg(Supervised):
 
 
     def predict(self, X):
+        """Predict X base on the models training
+
+        Input:
+            X (array_like): m examples of n features
+        
+        Output:
+            Predictions (int|array_like): 0s and 1s showing if a given example is classified as
+                member of a class (1) or not (0)
+            
+        """
         # raw prediction
         h = self.sigmoid(X.dot(self.theta))
         # compare raw prediction to threshold
