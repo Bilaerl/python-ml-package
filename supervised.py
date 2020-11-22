@@ -46,17 +46,75 @@ class Supervised(ABC):
 
 
 class LinearReg(Supervised):
+    """Create a Linear Regression object
 
-    def __init__ (self):
-        pass
+    Input:
+        reg_term (int): A number by which the model is regularize to stop it from
+            overfitting
+
+            Note: Regularization has not been tried yet
+    
+    Output:
+        None
+    """
+
+    def __init__ (self, reg_term=0):
+        self.reg_term = reg_term
+    
+
+    def __repr__(self):
+        return f"LinearReg(reg_term={self.reg_term})"
 
 
-    def train(self, X,y):
-        pass
+    def cost_func(self, theta, X,y):
+        """Find the cost of a prediction and gradients to minimize that cost
+
+        Input:
+            theta (array_like): Current gradients to be used in making prediction
+            X (array_like): m examples of n features on which the predictions will be made
+            y (array_like): Labels for examples of X. These are the targets of the prediction
+                and will be used to measure accuracy of predictions made
+
+        Output:
+            cost (float): Cost of the current prediction
+            grad (array_like): Corrected gradients base on the cost of current prediction
+        """
+        m,n = X.shape
+        # reshape for compatibility
+        y, theta = y.reshape(m,1), theta.reshape(n,1)
+        
+        # predictions
+        h = X.dot(theta)
+
+        # cost
+        cost = (1/(2*m)) * sum((h-y) ** 2)
+
+        # regularizing cost
+        cost_reg = (self.reg_term/(2*m)) * (theta[1:] ** 2).sum()
+        cost += cost_reg
+
+        # gradients
+        grad = (1/m) * ((X.T).dot(h-y))
+
+        # regularizing gradients
+        grad_reg = np.zeros_like(grad)
+        grad_reg[1:] = (self.reg_term/m) * theta[1:]
+        grad += grad_reg
+
+        return cost, grad
 
 
-    def predict(self, X,y):
-        pass
+    def predict(self, X):
+        """Predict X base on the models training
+
+        Input:
+            X (array_like): m examples of n features
+        
+        Output:
+            Predictions (int|array_like): Value predicted  
+        """
+        # return prediction
+        return X.dot(self.theta)
 
 
 class LogisticReg(Supervised):
@@ -125,11 +183,11 @@ class LogisticReg(Supervised):
         cost += cost_reg
 
         # gradients
-        grad = (1/m) * ( (X.T).dot(h - y) )
+        grad = (1/m) * ((X.T).dot(h-y))
 
         # regularizing gradients
         grad_reg = np.zeros_like(grad)
-        grad_reg[1:] = (self.reg_term/m) * theta[1:,:]
+        grad_reg[1:] = (self.reg_term/m) * theta[1:]
         grad += grad_reg
 
         return cost, grad
