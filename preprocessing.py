@@ -1,7 +1,7 @@
 import numpy as np
 
 def add_bias(X):
-    np.array(X) # convert to numpy array
+    X = np.array(X) # convert to numpy array
     X = X.reshape(len(X),-1) # reshape X for compatability
 
     bias = np.ones((len(X),1)) # create bias
