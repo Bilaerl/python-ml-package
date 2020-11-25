@@ -3,7 +3,7 @@ import numpy as np
 import scipy.optimize as op
 
 
-class Supervised(ABC):
+class Regression(ABC):
 
     @abstractmethod
     def cost_func(self, theta, X,y): pass
@@ -45,7 +45,7 @@ class Supervised(ABC):
 
 
 
-class LinearReg(Supervised):
+class LinearReg(Regression):
     """Create a Linear Regression object
 
     Input:
@@ -117,7 +117,7 @@ class LinearReg(Supervised):
         return X.dot(self.theta)
 
 
-class LogisticReg(Supervised):
+class LogisticReg(Regression):
     """Create a Logistic Regression object
 
     Input:
