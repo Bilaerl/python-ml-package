@@ -211,3 +211,30 @@ class LogisticReg(Supervised):
 
         # return predictions as int
         return predictions.astype('int')
+
+
+class SVM:
+
+    def __init__(self, kernel="linear", reg_term=0):
+        self.reg_term = reg_term
+        self.kernel = kernel
+    
+
+    def __repr__(self):
+        return f"SVM(kernel={self.kernel}, reg_term={self.reg_term})"
+    
+
+    def linear_kernel(self):
+        pass
+
+
+    def guassian_kernel(self):
+        pass
+
+
+    def train(self, theta, X, y):
+        pass
+
+
+    def predict(self, X):
+        pass
